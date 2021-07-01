@@ -43,7 +43,7 @@ const getShowCommentsButtonToolTip = () => {
 const setShowCommentsButtonToolTip = (value = "") =>
   localStorage.setItem("ShowCommentsButtonToolTip", value);
 
-const ModeButton = styled.div<{ active: boolean }>`
+const ModeButton = styled.div<{ active: boolean; type: string }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -59,12 +59,23 @@ const ModeButton = styled.div<{ active: boolean }>`
 
   svg path {
     fill: ${(props) =>
-      props.active
+      props.type !== "fill"
+        ? "transparent"
+        : props.active
+        ? props.theme.colors.comments.activeModeIcon
+        : props.theme.colors.comments.modeIcon};
+    stroke: ${(props) =>
+      props.type !== "stroke"
+        ? "transparent"
+        : props.active
         ? props.theme.colors.comments.activeModeIcon
         : props.theme.colors.comments.modeIcon};
   }
   svg circle {
-    stroke: transparent;
+    stroke: ${(props) =>
+      props.active
+        ? props.theme.colors.comments.activeModeIcon
+        : props.theme.colors.comments.modeIcon};
   }
 `;
 
@@ -216,6 +227,7 @@ function CommentModeBtn({
       active={isCommentMode}
       className="t--switch-comment-mode-on"
       onClick={handleSetCommentModeButton}
+      type="stroke"
     >
       <TooltipComponent
         content={
@@ -278,6 +290,7 @@ function ToggleCommentModeButton() {
             active={!isCommentMode}
             className="t--switch-comment-mode-off"
             onClick={() => setCommentModeInUrl(false)}
+            type="fill"
           >
             <ViewOrEditMode mode={mode} />
           </ModeButton>
